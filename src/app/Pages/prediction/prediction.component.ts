@@ -34,6 +34,8 @@ export class PredictionComponent implements OnInit{
     { label: 'PPE', controlName: 'input12', type: 'number', placeholder: 'Enter PPE', min: 0, max: 1000 }
   ];
   predictionResult: any;
+  names: string;
+  inputArray: any[];
   constructor(private formBuilder: FormBuilder, private service: DiseaseService) { }
   ngOnInit(): void {
     this.predictionForm = this.formBuilder.group({
@@ -58,11 +60,16 @@ export class PredictionComponent implements OnInit{
       // Handle form validation errors
       console.log('Form validation failed');
     } else {
+      this.names = this.predictionForm.get('input1').value;
       const data: number[] = []
       // extract form data without the name and age
       for (let i = 3; i < 13; i++) {
         data.push(Number(this.predictionForm.get('input' + i).value));
       }
+      this.inputArray = []
+      this.inputControls.forEach((control, index) => {
+        this.inputArray.push(this.predictionForm.get('input' + (index + 1)).value);
+      });
       const postData = [data];
       this.service.predict(postData).subscribe((response:any) => {
         this.predictionResult = response.prediction;
