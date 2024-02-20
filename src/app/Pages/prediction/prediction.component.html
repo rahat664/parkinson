@@ -1,0 +1,38 @@
+<div class="container mx-auto py-8">
+  <h1 class="text-3xl font-bold mb-4">Parkinson's Disease Prediction</h1>
+  <form [formGroup]="predictionForm" (ngSubmit)="onSubmit()">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Input Fields -->
+      <div *ngFor="let input of inputControls">
+        <label class="block mb-2">{{ input.label }}</label>
+        <input type="{{input.type}}" required placeholder="{{input.placeholder}}" class="w-full p-2 border border-gray-300 rounded-md" [formControlName]="input.controlName">
+<!--        validation error message-->
+
+        <div *ngIf="predictionForm.get(input.controlName).invalid && predictionForm.get(input.controlName).touched" class="text-red-500 text-sm mt-1">
+          <div *ngIf="predictionForm.get(input.controlName).errors['required']">This field is required</div>
+          <div *ngIf="predictionForm.get(input.controlName).errors['minlength']">Minimum length is {{input?.minLength}} characters</div>
+          <div *ngIf="predictionForm.get(input.controlName).errors['maxlength']">Maximum length is {{input?.maxLength}} characters</div>
+          <div *ngIf="predictionForm.get(input.controlName).errors['min']">Minimum value is {{input?.min}}</div>
+          <div *ngIf="predictionForm.get(input.controlName).errors['max']">Maximum value is {{input?.max}}</div>
+          <div *ngIf="predictionForm.get(input.controlName).errors['pattern']">Invalid input</div>
+        </div>
+      </div>
+    </div>
+    <!-- Submit Button -->
+    <button type="submit" class="bg-blue-500 text-white py-2 px-4 mt-4 rounded-md">Predict</button>
+  </form>
+
+<!--  prediction result-->
+  <div *ngIf="predictionResult" class="mt-8">
+    <h2 class="text-2xl font-bold mb-4">Prediction Result</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div *ngFor="let result of predictionResult">
+        <div class="bg-gray-500 py-4 rounded-md">
+          <h3 class="text-xl mb-2">
+            {{predictionForm.get('input1').value}} You are a parkinson {{result == 0 ? 'free patient' : 'patient'}}
+          </h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
